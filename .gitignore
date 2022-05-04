@@ -1,0 +1,8 @@
+.idea
+__pycache__
+.env
+venv
+config.ini
+another_scripts
+files
+node_modules
