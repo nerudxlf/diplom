@@ -152,7 +152,7 @@ async def service_get_authors_by_name(search: str, db: orm.Session):
     result = []
     for i in split_search:
         result.append(db.query(Users.name, Users.surname, Users.patronymic, Users.user_id).filter(
-            Users.name.like('%' + i + '%') | Users.surname.like('%' + i + '%') | Users.patronymic.like('%' + i + '%')
+            Users.name.ilike('%' + i + '%') | Users.surname.ilike('%' + i + '%') | Users.patronymic.ilike('%' + i + '%')
         ).limit(5))
     return_result = []
     for i in result:
@@ -218,7 +218,7 @@ async def service_get_basic_statistic(id: int, db: orm.Session):
 async def service_get_summary_statistic(id: int, db: orm.Session):
     articles = db.query(Users).filter(Users.user_id == id).first().author
     result = []
-    for i in range(datetime.now().year-6, datetime.now().year+1):
+    for i in range(datetime.now().year - 6, datetime.now().year + 1):
         count = 0
         for j in articles:
             if i == j.article.publication_date:
@@ -238,18 +238,45 @@ async def service_get_graph(id: int, db: orm.Session):
 
 async def service_get_all_by_department(query: str, db: orm.Session):
     result = []
-    departments = db.query(Departments).filter(Departments.name.like('%' + (query if query else "") + '%')).all()
+    departments = db.query(Departments).filter(Departments.name.ilike('%' + (query if query else "") + '%')).all()
+    id = 1
     for department in departments:
-        publication = []
-        for author in department.workplace:
-            for i in author.user.author.article:
-                publication.append(i)
-        result.append({
-            "id": department.department_id,
-            "department": department.name,
-            "authors": len(department.workplace),
-            "publication": len(set(publication))
-        })
-    print(result)
-    return
+        publication = 0
+        employee = []
+        for workplace in department.workplace:
+            publication += len(workplace.user.author)
+            employee.append(workplace.user)
+        result.append(
+            {
+                "id": id,
+                "department_id": department.department_id,
+                "department": department.name,
+                "publication": publication,
+                "employee": len(list(set(employee)))
+            }
+        )
+        id += 1
+    return result
 
+
+async def service_get_all_by_faculty(query: str, db: orm.Session):
+    result = []
+    id = 1
+    faculties = db.query(Faculties).filter(Faculties.name.ilike('%' + (query if query else "") + '%')).all()
+    for faculty in faculties:
+        publication = 0
+        employee = []
+        for workplace in faculty.workplace:
+            publication += len(workplace.user.author)
+            employee.append(workplace.user)
+        result.append(
+            {
+                "id": id,
+                "faculty_id": faculty.faculty_id,
+                "faculty": faculty.name,
+                "publication": publication,
+                "employee": len(list(set(employee)))
+            }
+        )
+        id += 1
+    return result

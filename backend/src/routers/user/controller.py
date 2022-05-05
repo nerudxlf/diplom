@@ -12,7 +12,7 @@ from src.routers.user.service import service_get_user_by_email, service_create_n
     service_add_research_field, service_get_research_fields_by_user_id, service_get_current_research_field, \
     service_delete_research_field, service_get_authors_by_name, service_get_user_articles, service_delete_article_by_id, \
     service_get_all_university_units, service_get_all_employees, service_get_user_by_phone, service_get_basic_statistic, \
-    service_get_summary_statistic, service_get_graph, service_get_all_by_department
+    service_get_summary_statistic, service_get_graph, service_get_all_by_department, service_get_all_by_faculty
 from src.scheme.scheme_indicators import SchemeIndicators
 from src.scheme.scheme_user import SchemeUserCreate, SchemeUser, SchemeUserReturn
 
@@ -154,4 +154,9 @@ async def controller_get_graph(id: int, db: orm.Session):
 
 async def controller_get_all_by_departments(query: str, db: orm.Session):
     result = await service_get_all_by_department(query, db)
+    return result
+
+
+async def controller_get_all_by_faculty(query: str, db: orm.Session):
+    result = await service_get_all_by_faculty(query, db)
     return result

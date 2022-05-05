@@ -9,7 +9,7 @@ from src.routers.user.controller import controller_get_user_by_id, controller_ge
     controller_get_research_fields_by_user_id, controller_delete_research_field, controller_get_authors_by_name, \
     controller_get_user_articles, controller_get_all_employees, controller_delete_article_by_id, \
     controller_get_all_university_units, controller_get_basic_statistic, controller_get_summary_statistic, \
-    controller_get_graph, controller_get_all_by_departments
+    controller_get_graph, controller_get_all_by_departments, controller_get_all_by_faculty
 from src.scheme.scheme_indicators import SchemeIndicators
 from src.scheme.scheme_user import SchemeUser
 
@@ -190,4 +190,10 @@ async def get_graph(id: int, db: orm.Session = Depends(get_db)):
 @router.get("/all/departments/")
 async def get_all_by_departments(query: str, db: orm.Session = Depends(get_db)):
     result = await controller_get_all_by_departments(query, db)
+    return result
+
+
+@router.get("/all/faculties/")
+async def get_all_by_faculty(query: str, db: orm.Session = Depends(get_db)):
+    result = await controller_get_all_by_faculty(query, db)
     return result
