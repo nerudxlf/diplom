@@ -38,8 +38,9 @@ async def rejection_article(article_id: int, detail: str | None, role_access: bo
 
 
 @router.post("/upload_file")
-async def upload_file(file: UploadFile, db: orm.Session = Depends(get_db), role_access: bool = Depends(operator_role)):
-    result = await controller_upload_file(file, db, role_access)
+async def upload_file(file: UploadFile, role_access: bool = Depends(operator_role)):
+
+    result = await controller_upload_file(file, role_access)
     return result
 
 

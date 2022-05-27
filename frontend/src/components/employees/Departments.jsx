@@ -43,7 +43,7 @@ const Departments = () => {
                         <TableRow>
                             <TableCell>ID</TableCell>
                             <TableCell>Кафедра или отдел</TableCell>
-                            <TableCell>Публикаций</TableCell>
+                            <TableCell align="center">Публикаций</TableCell>
                             <TableCell align="center">Сотрудников</TableCell>
                         </TableRow>
                     </TableHead>

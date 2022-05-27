@@ -4,7 +4,8 @@ from sqlalchemy import orm
 from src.chekers.roles import RolesChecker
 from src.database.db_connect import get_db
 from src.routers.analyst.controller import controller_count_all_publications, controller_count_publication_by_year, \
-    controller_get_analysis_authors, controller_get_analysis_articles, controller_count_authors
+    controller_get_analysis_authors, controller_get_analysis_articles, controller_count_authors, \
+    controller_get_number_of_authors, controller_get_publication_by_type
 
 router = APIRouter(
     prefix="/api/analyst",
@@ -51,4 +52,16 @@ async def get_analysis_authors(role_access: bool = Depends(analyst_role), db: or
 @router.get('/articles/')
 async def get_analysis_articles(role_access: bool = Depends(analyst_role), db: orm.Session = Depends(get_db)):
     result = await controller_get_analysis_articles(role_access, db)
+    return result
+
+
+@router.get("/authors/number/")
+async def get_number_of_authors(role_access: bool = Depends(analyst_role), db: orm.Session = Depends(get_db)) -> int:
+    result = await controller_get_number_of_authors(role_access, db)
+    return result
+
+
+@router.get("/count/publications_by_type/")
+async def get_publication_by_type(role_access: bool = Depends(analyst_role), db: orm.Session = Depends(get_db)) -> int:
+    result = await controller_get_publication_by_type(role_access, db)
     return result

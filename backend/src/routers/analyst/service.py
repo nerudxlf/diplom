@@ -1,6 +1,6 @@
 from sqlalchemy import orm
 
-from src.database.db_model import Articles, DocumentTypes, Authors, Users
+from src.database.db_model import Articles, DocumentTypes, Users
 
 
 async def service_count_all_publications(db: orm.Session):
@@ -40,7 +40,7 @@ async def service_get_analysis_authors(db: orm.Session):
             "id": user.user_id,
             "name": f"{user.name} {user.surname}{' ' + user.patronymic if user.patronymic else ''}",
             "email": user.email,
-            "department": user.workplace.department.name if user.workplace else None,
+            "department":  user.workplace[0].department.name if user.workplace else None,
             "publication": len(user.author),
             "article": len([i for i in user.author if i.article.document_type.name == "article"]),
             "review": len([i for i in user.author if i.article.document_type.name == "review"]),
@@ -63,4 +63,26 @@ async def service_get_analysis_articles(db: orm.Session):
             "jif": article.quartiles.jif,
             "csp": article.quartiles.csp,
         })
+    return result
+
+
+async def service_get_number_of_authors(db: orm.Session):
+    return db.query(Users).count()
+
+
+async def service_get_publication_by_type(db: orm.Session):
+    article = len(db.query(DocumentTypes).filter(DocumentTypes.name == "article").first().article)
+    review = len(db.query(DocumentTypes).filter(DocumentTypes.name == "review").first().article)
+    conference_paper = len(db.query(DocumentTypes).filter(DocumentTypes.name == "conference paper").first().article)
+    note = len(db.query(DocumentTypes).filter(DocumentTypes.name == "note").first().article)
+    data_paper = len(db.query(DocumentTypes).filter(DocumentTypes.name == "data paper").first().article)
+    book_chapter = len(db.query(DocumentTypes).filter(DocumentTypes.name == "book chapter").first().article)
+    result = [
+        {"name": "article", "value": article},
+        {"name": "review", "value": review},
+        {"name": "conference paper", "value": conference_paper},
+        {"name": "note", "value": note},
+        {"name": "data paper", "value": data_paper},
+        {"name": "book chapter", "value": book_chapter},
+    ]
     return result

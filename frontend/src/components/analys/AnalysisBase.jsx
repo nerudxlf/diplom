@@ -3,31 +3,28 @@ import {Box, Grid, Paper, Typography} from "@mui/material";
 import {Bar, BarChart, CartesianGrid, Legend, Line, LineChart, Tooltip, XAxis, YAxis} from "recharts";
 import {UserContext} from "../../context/UserContext";
 import TotalPublication from "./charts/TotalPublication";
-
-
-const data = [
-    {
-        "name": "Факультет 1",
-        "uv": 200
-    },
-    {
-        "name": "Факультет 2",
-        "uv": 300
-    },
-    {
-        "name": "Факультет 3",
-        "uv": 400
-    },
-    {
-        "name": "Факультет 4",
-        "uv": 500
-    }
-]
+import PublicationByDocumentType from "./charts/PublicationByDocumentType";
 
 
 const AnalysisBase = () => {
     const [publication, setPublications] = useState(0);
     const [token] = useContext(UserContext);
+    const [authors, setAuthors] = useState(0);
+
+    const getAuthors = async () => {
+        const requestOption = {
+            method: "GET",
+            headers: {
+                "Content-Type": "applications/json",
+                Authorization: "Bearer " + token,
+            },
+        };
+        const response = await fetch('/api/analyst/authors/number/', requestOption);
+        const data = await response.json();
+        if (response.ok) {
+            setAuthors(data);
+        }
+    }
 
     const getPublications = async () => {
         const requestOption = {
@@ -46,6 +43,10 @@ const AnalysisBase = () => {
 
     useEffect(() => {
         getPublications();
+    }, []);
+
+    useEffect(() => {
+        getAuthors();
     }, []);
 
 
@@ -113,7 +114,7 @@ const AnalysisBase = () => {
                                     Авторов
                                 </Typography>
                                 <Typography variant="h6" component="div" sx={{textAlign: "center"}}>
-                                    1020
+                                    {authors}
                                 </Typography>
                             </Paper>
                             <Paper elevation={0}>
@@ -121,22 +122,14 @@ const AnalysisBase = () => {
                                     Публикаций на атвора
                                 </Typography>
                                 <Typography variant="h6" component="div" sx={{textAlign: "center"}}>
-                                    1.4
+                                    {(publication.all_publication ? (publication.all_publication) : (0)) / authors}
                                 </Typography>
                             </Paper>
                         </Paper>
                     </Paper>
                 </Grid>
                 <Grid item sm={12} md={6} xl={6}>
-                    <Typography variant="h6" sx={{textAlign: "center"}}>По кафедрам</Typography>
-                    <BarChart width={512} height={300} data={data} margin={{top: 20}}>
-                        <CartesianGrid strokeDasharray="3 3"/>
-                        <XAxis dataKey="name"/>
-                        <YAxis/>
-                        <Tooltip/>
-                        <Legend/>
-                        <Bar dataKey="uv" fill="#82ca9d"/>
-                    </BarChart>
+                    <PublicationByDocumentType token={token}/>
                 </Grid>
                 <Grid item sm={12} md={6} xl={6}>
                     <TotalPublication token={token}/>

@@ -20,7 +20,8 @@ const ArticlesFromUpload = (props) => {
         // resolver: yupResolver(schema),
     })
     const [info, setInfo] = useState();
-
+    const [typeError, setTypeError] = useState(false);
+    const [columnError, setColumnError] = useState(false);
 
     const onSubmit = async (data) => {
         let formData = new FormData();
@@ -35,8 +36,13 @@ const ArticlesFromUpload = (props) => {
         const response = await fetch("/api/operator/upload_file", requestOption);
         const answer = await response.json();
         if (response.ok) {
-            console.log(JSON.parse(answer));
             setInfo(JSON.parse(answer));
+        }
+        else if (response.status === 409){
+            setTypeError(true);
+        }
+        else if(response.status === 400){
+            setColumnError(true);
         }
     }
 
@@ -58,6 +64,16 @@ const ArticlesFromUpload = (props) => {
 
     return (
         <Paper elevation={4} sx={{mt: 1}}>
+            {typeError ? (
+                <Paper sx={{p: 2, borderBottom: 1}} square>
+                    <Typography variant="h6" sx={{textAlign: "center", color: "error.main"}}>Файл данного типа не поддерживается</Typography>
+                </Paper>
+            ): (<></>)}
+            {columnError ? (
+                <Paper sx={{p: 2, borderBottom: 1}} square>
+                    <Typography variant="h6" sx={{textAlign: "center", color: "error.main"}}>Основные колонки не найдеы</Typography>
+                </Paper>
+            ): (<></>)}
             <Form onSubmit={handleSubmit(onSubmit)}>
                 <Paper sx={{p: 2}} elevation={0}>
                     <PrimaryInput
@@ -66,7 +82,7 @@ const ArticlesFromUpload = (props) => {
                         id="file"
                         {...register("file")}
                     />
-                    <Button type="submit" sx={{ml: 2}} variant="outlined">Отправить</Button>
+                    <Button type="submit" sx={{ml: 2}} variant="outlined" onClick={()=>{setTypeError(false); setColumnError(false)}}>Отправить</Button>
                 </Paper>
             </Form>
             {info ? (<>

@@ -96,10 +96,10 @@ const PrimaryRow = (props) => {
                                                 {workplace.position ? (workplace.position) : (<></>)}
                                             </TableCell>
                                             <TableCell>
-                                                <IconButton aria-label="expand row"
-                                                            size="small" color="error" variatn="outlined">
+                                                {workplace.workplace_id ? (<IconButton aria-label="expand row"
+                                                                                       size="small" color="error" variatn="outlined">
                                                     <ClearIcon/>
-                                                </IconButton>
+                                                </IconButton>): (<></>)}
                                             </TableCell>
                                         </TableRow>
                                     ))}

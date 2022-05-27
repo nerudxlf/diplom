@@ -59,6 +59,7 @@ async def service_get_employees(db: orm.Session):
         if employee.workplace:
             for workplace in employee.workplace:
                 workplaces.append(dict(
+                    workplace_id=workplace.workplace_id,
                     university=workplace.university.name if workplace.university else None,
                     institute=workplace.institute.name if workplace.institute else None,
                     faculty=workplace.faculty.name if workplace.faculty else None,
@@ -67,6 +68,7 @@ async def service_get_employees(db: orm.Session):
                 ))
         else:
             workplaces.append(dict(
+                workplace_id=None,
                 university=None,
                 institute=None,
                 faculty=None,

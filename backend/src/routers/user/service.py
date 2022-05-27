@@ -57,7 +57,7 @@ async def service_get_user_workplaces(user_id: int, db: orm.Session):
     except:
         workplaces = None
     result = [{'university': i.university, 'institute': i.institute, 'faculty': i.faculty, 'department': i.department,
-               'position': i.position} for i in workplaces]
+               'position': i.position, 'workplace_id': i.workplace_id} for i in workplaces]
     return result
 
 

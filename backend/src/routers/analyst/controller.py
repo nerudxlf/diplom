@@ -5,7 +5,7 @@ from sqlalchemy import orm
 
 from src.routers.analyst.service import service_count_all_publications, service_count_publications_by_year, \
     service_count_authors, service_count_review, service_count_article, service_get_analysis_authors, \
-    service_get_analysis_articles
+    service_get_analysis_articles, service_get_number_of_authors, service_get_publication_by_type
 
 
 async def controller_count_all_publications(role_access: bool, db: orm.Session):
@@ -45,4 +45,18 @@ async def controller_get_analysis_articles(role_access: bool, db: orm.Session):
     if not role_access:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
     result = await service_get_analysis_articles(db)
+    return result
+
+
+async def controller_get_number_of_authors(role_access: bool, db: orm.Session):
+    if not role_access:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
+    result = await service_get_number_of_authors(db)
+    return result
+
+
+async def controller_get_publication_by_type(role_acccess: bool, db: orm.Session):
+    if not role_acccess:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
+    result = await service_get_publication_by_type(db)
     return result

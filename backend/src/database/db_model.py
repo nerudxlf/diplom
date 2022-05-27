@@ -21,7 +21,7 @@ class Users(db_connect.Base):
     image = _orm.relationship('Images')
     indicators = _orm.relationship('Indicators', back_populates="user", uselist=False)
     author = _orm.relationship('Authors', back_populates="user")
-    workplace = _orm.relationship('Workplaces', back_populates="user", uselist=False)
+    workplace = _orm.relationship('Workplaces', back_populates="user")
 
     def verify_password(self, password: str):
         return _hash.bcrypt.verify(password, self.password)

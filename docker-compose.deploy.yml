@@ -1,0 +1,47 @@
+version: '3.9'
+
+services:
+  analitic-system-backend:
+    container_name: analitic-system-backend
+    build:
+      context: backend/
+      dockerfile: Dockerfile
+    working_dir: /home/diplom/app/back
+    volumes:
+      - /home/diplom/backend:/home/diplom/app/back
+    command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload --debug
+    ports: ['5001:8000']
+    environment:
+      DEBUG: 1
+    depends_on:
+      - analitic-system-frontend
+    restart: on-failure
+    deploy:
+      resources:
+        limits:
+          memory: 32m
+
+  analitic-system-frontend:
+    container_name: analitic-system-frontend
+    build:
+      context: frontend/
+      dockerfile: Dockerfile
+    command: npm run start
+    ports: ['5000:3000']
+    deploy:
+      resources:
+        limits:
+          memory: 32m
+
+  proxy:
+    container_name: nginx
+    build: 
+      context: nginx/
+      dockerfile: Dockerfile
+    volumes:
+      - /home/diplom/backend/nginx/:/etc/nginx/
+    ports: ['80:80']
+    deploy:
+      resources:
+        limits:
+          memory: 32m

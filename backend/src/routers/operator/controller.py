@@ -16,12 +16,12 @@ async def controller_get_not_confirm_articles(role_access: bool, db: orm.Session
     return result
 
 
-async def controller_upload_file(file: UploadFile, db: orm.Session, role_access: bool):
+async def controller_upload_file(file: UploadFile, role_access: bool):
     if not role_access:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
     ext = file.filename.split(".")[-1]
-    if ext != "xlsx" and ext != "xls" and ext != "csv":
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST)
+    if ext != "xlsx" and ext != "xls":
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT)
     result = await service_view_data_from_file(file)
     return result
 
