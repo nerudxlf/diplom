@@ -26,6 +26,15 @@ async def confirm_article(
         db: orm.Session = Depends(get_db),
         role_access: bool = Depends(operator_role)
 ):
+    """
+    Confirmed Article
+    :param author_id: User ID
+    :param article_id: Article ID
+    :param unverified_article_id: Unverified Article ID
+    :param db: Current db Session
+    :param role_access: Current user role
+    :return:
+    """
     result = await controller_article_confirm(author_id, article_id, unverified_article_id, db, role_access)
     return result
 
@@ -33,6 +42,14 @@ async def confirm_article(
 @router.post("/rejection_article/")
 async def rejection_article(article_id: int, detail: str | None, role_access: bool = Depends(operator_role),
                             db: orm.Session = Depends(get_db)):
+    """
+
+    :param article_id:
+    :param detail:
+    :param role_access:
+    :param db:
+    :return:
+    """
     result = await controller_rejection_article(article_id, detail, role_access, db)
     return result
 
@@ -51,12 +68,26 @@ async def upload_dataset(
         role_access: bool = Depends(operator_role),
         user: SchemeUser = Depends(controller_get_current_user)
 ):
+    """
+    Uploaded Data Set
+    :param articles: List Articles
+    :param db: Current db Session
+    :param role_access: Current user Role
+    :param user: Current user
+    :return:
+    """
     result = await controller_upload_dataset(articles, user, role_access, db)
     return result
 
 
 @router.get("/articles")
 async def get_not_confirm_articles(db: orm.Session = Depends(get_db), role_access: bool = Depends(operator_role)):
+    """
+
+    :param db:
+    :param role_access:
+    :return:
+    """
     result = await controller_get_not_confirm_articles(role_access, db)
     return result
 
@@ -68,5 +99,13 @@ async def add_new_article(
         role_access: bool = Depends(operator_role),
         user: SchemeUser = Depends(controller_get_current_user)
 ):
+    """
+
+    :param article:
+    :param db:
+    :param role_access:
+    :param user:
+    :return:
+    """
     result = await controller_add_new_article(article, user, role_access, db)
     return result

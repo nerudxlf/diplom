@@ -1,3 +1,5 @@
+import json
+
 import jwt
 from fastapi import HTTPException, status, Depends
 from sqlalchemy import orm
@@ -12,7 +14,8 @@ from src.routers.user.service import service_get_user_by_email, service_create_n
     service_add_research_field, service_get_research_fields_by_user_id, service_get_current_research_field, \
     service_delete_research_field, service_get_authors_by_name, service_get_user_articles, service_delete_article_by_id, \
     service_get_all_university_units, service_get_all_employees, service_get_user_by_phone, service_get_basic_statistic, \
-    service_get_summary_statistic, service_get_graph, service_get_all_by_department, service_get_all_by_faculty
+    service_get_summary_statistic, service_get_graph, service_get_all_by_department, service_get_all_by_faculty, \
+    service_change_password, service_user_get_article_by_id, service_get_user_publication_by_id
 from src.scheme.scheme_indicators import SchemeIndicators
 from src.scheme.scheme_user import SchemeUserCreate, SchemeUser, SchemeUserReturn
 
@@ -72,6 +75,10 @@ async def controller_update_user_indicators(indicators: SchemeIndicators, db: or
 
 
 async def controller_add_new_article_check(link: str, user: SchemeUser, db: orm.Session):
+    number_unconfirmed_publication = await service_get_unverified_articles_by_user(user.user_id, db)
+    if len(number_unconfirmed_publication) > 5:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
+                            detail="Number of unconfirmed publications more than 5")
     result = await service_add_new_article_check(link, user.user_id, db)
     return result
 
@@ -159,4 +166,34 @@ async def controller_get_all_by_departments(query: str, db: orm.Session):
 
 async def controller_get_all_by_faculty(query: str, db: orm.Session):
     result = await service_get_all_by_faculty(query, db)
+    return result
+
+
+async def controller_password_verification(password: str, user: SchemeUser, db: orm.Session):
+    current_user = await service_get_user_by_id(user.user_id, db)
+    if not current_user.verify_password(password):
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Пароль введен некорректно")
+    return json.dumps({"message": "ok"})
+
+
+async def controller_change_password(password: str, user: SchemeUser, db: orm.Session):
+    result = await service_change_password(password, user, db)
+    return result
+
+
+async def controller_add_new_article_by_id(id: int, user: SchemeUser, db: orm.Session):
+    article = await service_user_get_article_by_id(id, db)
+    if not article:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Article not found")
+    number_unconfirmed_publication = await service_get_unverified_articles_by_user(user.user_id, db)
+    if len(number_unconfirmed_publication) > 4:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
+                            detail="Number of unconfirmed publications more than 5")
+    check_article = await service_get_user_publication_by_id(user.user_id, id, db)
+    if check_article:
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="")
+    for a in number_unconfirmed_publication:
+        if a.link == article.link:
+            raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="")
+    result = await service_add_new_article_check(article.link, user.user_id, db)
     return result

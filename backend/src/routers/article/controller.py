@@ -23,7 +23,7 @@ async def controller_get_all_articles(search: str, page: int, limit: int, public
                                       start: str, end: str, db: orm.Session):
     pages = page * limit
     articles = None
-    if not (search or publication_type  or start or end):
+    if not (search or publication_type or start or end):
         articles = await service_get_all_articles(pages, limit, db)
     elif search or publication_type or start or end:
         if start and end:

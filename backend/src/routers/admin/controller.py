@@ -18,7 +18,9 @@ async def controller_admin_create_user(user: SchemeAdminCreateUser, role_access:
     return result
 
 
-async def controller_delete_user(user_id: int, db: orm.Session):
+async def controller_delete_user(user_id: int, role_access: bool, db: orm.Session):
+    if not role_access:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
     result = await service_delete_user(user_id, db)
     return result
 

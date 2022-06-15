@@ -16,9 +16,9 @@ router = APIRouter(
 @router.post("/registration")
 async def registration(user: SchemeUserCreate, db: orm.Session = Depends(get_db)):
     """
-
-    :param user:
-    :param db:
+    User registration
+    :param user: Scheme User Create
+    :param db: Current db Session
     :return:
     """
     token = await controller_create_new_user(user, db)
@@ -27,5 +27,11 @@ async def registration(user: SchemeUserCreate, db: orm.Session = Depends(get_db)
 
 @router.post("/token")
 async def login(form_data: security.OAuth2PasswordRequestForm = Depends(), db: orm.Session = Depends(get_db)):
+    """
+    Login user
+    :param form_data: login data
+    :param db: Current db Session
+    :return: JWT-token
+    """
     token = await controller_generate_token(form_data, db)
     return token

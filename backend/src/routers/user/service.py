@@ -1,5 +1,7 @@
+import json
 from datetime import date
 from datetime import datetime
+
 import passlib.hash as _hash
 from sqlalchemy import orm
 
@@ -105,7 +107,8 @@ async def service_add_new_article_check(link: str, user_id: int, db: orm.Session
 
 
 async def service_get_unverified_articles_by_user(user_id: int, db: orm.Session):
-    result = db.query(UnverifiedArticles).filter(UnverifiedArticles.user_id == user_id).all()
+    result = db.query(UnverifiedArticles).filter(UnverifiedArticles.user_id == user_id,
+                                                 UnverifiedArticles.status == 1).all()
     return result
 
 
@@ -169,6 +172,10 @@ async def service_get_user_articles(id: int, db: orm.Session):
     value_publication = len(result)
     publication = [i.article for i in result]
     return dict(value=value_publication, data=publication)
+
+
+async def service_get_user_publication_by_id(user_id: int, article_id: int, db: orm.Session):
+    return db.query(Authors).filter(Authors.user_id == user_id, Authors.article_id == article_id).first()
 
 
 async def service_get_all_employees(query, db: orm.Session):
@@ -280,3 +287,15 @@ async def service_get_all_by_faculty(query: str, db: orm.Session):
         )
         id += 1
     return result
+
+
+async def service_change_password(password: str, user: SchemeUser, db: orm.Session):
+    current_user = db.query(Users).filter(Users.user_id == user.user_id).first()
+    current_user.password = _hash.bcrypt.hash(password)
+    db.commit()
+    db.refresh(current_user)
+    return json.dumps({"message": "ok"})
+
+
+async def service_user_get_article_by_id(id: int, db: orm.Session):
+    return db.query(Articles).filter(Articles.article_id == id).first()

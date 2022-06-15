@@ -5,8 +5,6 @@ from src.chekers.roles import RolesChecker
 from src.database.db_connect import get_db
 from src.routers.hr.controller import controller_add_user_workplace, controller_delete_user_workplace, \
     controller_get_employees
-from src.routers.user import controller_get_current_user
-from src.scheme.scheme_user import SchemeUser
 from src.scheme.scheme_workplaces import SchemeWorkplacesCreate
 
 router = APIRouter(
@@ -23,6 +21,12 @@ async def get_employees(
         role_access: bool = Depends(operator_role),
         db: orm.Session = Depends(get_db)
 ):
+    """
+    Get user workplaces
+    :param role_access: Current user Role
+    :param db: Current db Session
+    :return:
+    """
     result = await controller_get_employees(role_access, db)
     return result
 
