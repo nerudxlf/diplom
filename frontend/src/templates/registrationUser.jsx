@@ -43,29 +43,27 @@ const RegistrationUser = () => {
     })
 
     const onSubmit = async (data) => {
-        if (data.password === data.passwordRepeat && data.password > 4) {
-            const requestOptions = {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    email: data.email,
-                    hashed_password: data.password,
-                    name: data.name,
-                    surname: data.surname,
-                    patronymic: data.patronymic,
-                    phone: data.phone,
-                }),
-            };
-            const response = await fetch('/api/auth/registration', requestOptions);
-            const answer = await response.json();
-            if (response.ok) {
-                setToken(answer.access_token)
-            }
-            if (response.status === 403) {
-                setError("Пользователь с таким email или с таким номером телефона зарегистрирован")
-            }
+        const requestOptions = {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                email: data.email,
+                hashed_password: data.password,
+                name: data.name,
+                surname: data.surname,
+                patronymic: data.patronymic,
+                phone: data.phone,
+            }),
+        };
+        const response = await fetch('/api/auth/registration', requestOptions);
+        const answer = await response.json();
+        if (response.ok) {
+            setToken(answer.access_token)
+        }
+        if (response.status === 403) {
+            setError("Пользователь с таким email или с таким номером телефона зарегистрирован")
         }
     }
 
@@ -103,7 +101,7 @@ const RegistrationUser = () => {
                             id="name"
                             type="text"
                             label="Имя"
-                            onChange={()=>setError(false)}
+                            onChange={() => setError(false)}
                             name="name"
                             error={!!errors?.name}
                             helperText={errors?.name?.message}
@@ -113,7 +111,7 @@ const RegistrationUser = () => {
                             id="surname"
                             type="text"
                             label="Фамилия"
-                            onChange={()=>setError(false)}
+                            onChange={() => setError(false)}
                             name="surname"
                             error={!!errors?.surname}
                             helperText={errors?.surname?.message}
@@ -123,7 +121,7 @@ const RegistrationUser = () => {
                             id="patronymic"
                             type="text"
                             label="Отчество"
-                            onChange={()=>setError(false)}
+                            onChange={() => setError(false)}
                             name="patronymic"
                             error={!!errors?.patronymic}
                             helperText={errors?.patronymic?.message}
@@ -133,7 +131,7 @@ const RegistrationUser = () => {
                             id="phone"
                             type="tel"
                             label="Телефон"
-                            onChange={()=>setError(false)}
+                            onChange={() => setError(false)}
                             name="phone"
                             onChange={(event) => {
                                 event.target.value = normalizePhoneNumber(event.target.value);
@@ -146,7 +144,7 @@ const RegistrationUser = () => {
                             id="email"
                             type="text"
                             label="Email"
-                            onChange={()=>setError(false)}
+                            onChange={() => setError(false)}
                             name="email"
                             error={!!errors?.email}
                             helperText={errors?.email?.message}
@@ -156,7 +154,7 @@ const RegistrationUser = () => {
                             id="password"
                             type="password"
                             label="Пароль"
-                            onChange={()=>setError(false)}
+                            onChange={() => setError(false)}
                             name="password"
                             error={!!errors?.password}
                             helperText={errors?.password?.message}
@@ -166,7 +164,7 @@ const RegistrationUser = () => {
                             id="passwordRepeat"
                             type="password"
                             label="Повторите пароль"
-                            onChange={()=>setError(false)}
+                            onChange={() => setError(false)}
                             name="passwordRepeat"
                             error={!!errors?.passwordRepeat}
                             helperText={errors?.passwordRepeat?.message}

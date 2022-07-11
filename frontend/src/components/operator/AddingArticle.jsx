@@ -6,7 +6,6 @@ import {useForm} from "react-hook-form";
 import * as yup from "yup";
 import {yupResolver} from "@hookform/resolvers/yup";
 import PrimaryInputSelect from "../inputs/PrimaryInputSelect";
-import ModalWindowOk from "./ModalWindow/ModalWindowOk";
 
 const field = 'Обязательное поле';
 

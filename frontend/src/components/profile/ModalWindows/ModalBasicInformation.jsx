@@ -32,6 +32,7 @@ const ModalBasicInformation = ({token, name, surname, patronymic, email, phone, 
             patronymic = dataResponse.u_patronymic;
             email = dataResponse.u_email;
             phone = dataResponse.u_phone;
+            props.onClose();
         }
     }
 

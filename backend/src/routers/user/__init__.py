@@ -349,5 +349,12 @@ async def get_all_by_faculty(query: str, db: orm.Session = Depends(get_db)):
 @router.post('/unverified_articles/{id}')
 async def add_new_article_check_by_id(id: int, user: SchemeUser = Depends(controller_get_current_user),
                                       db: orm.Session = Depends(get_db)):
+    """
+    Added new unverified article by id
+    :param id: article id
+    :param user: Current User
+    :param db: Current db Session
+    :return:
+    """
     result = await controller_add_new_article_by_id(id, user, db)
     return result

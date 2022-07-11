@@ -83,9 +83,9 @@ async def upload_dataset(
 @router.get("/articles")
 async def get_not_confirm_articles(db: orm.Session = Depends(get_db), role_access: bool = Depends(operator_role)):
     """
-
-    :param db:
-    :param role_access:
+    Getting not confirmed articles
+    :param db: Current db Session
+    :param role_access: Current user Role
     :return:
     """
     result = await controller_get_not_confirm_articles(role_access, db)
@@ -100,11 +100,11 @@ async def add_new_article(
         user: SchemeUser = Depends(controller_get_current_user)
 ):
     """
-
-    :param article:
-    :param db:
-    :param role_access:
-    :param user:
+    Added new article
+    :param article: Scheme Article Create
+    :param db: Current db Session
+    :param role_access: Current user Role
+    :param user: Current user
     :return:
     """
     result = await controller_add_new_article(article, user, role_access, db)

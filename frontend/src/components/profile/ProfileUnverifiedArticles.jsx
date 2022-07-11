@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Button, Paper, Typography} from "@mui/material";
+import {Button, Link, Paper, Typography} from "@mui/material";
 
 const ProfileUnverifiedArticles = (props) => {
     const [unverifiedArticles, setUnverifiedArticles] = useState();
@@ -54,7 +54,7 @@ const ProfileUnverifiedArticles = (props) => {
                             <>
                                 <Typography
                                     variant="h5">{item?.status === 1 ? ("Не проверенно") : (item?.status === 3 ? ("Не принято") : (<></>))}</Typography>
-                                <Typography variant="body2">{item?.link}</Typography>
+                                <Link href={item?.link} variant="body1" underline="hover">Ссылка на публикацию</Link>
                             </>
 
 

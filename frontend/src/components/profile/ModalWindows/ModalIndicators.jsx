@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {Box, Button, Modal, Paper, Typography} from "@mui/material";
 import {useForm} from "react-hook-form";
 import Form from "../../Form";
@@ -8,6 +8,8 @@ const ModalIndicators = ({indicators, token, ...props}) => {
     const {handleSubmit, register} = useForm({
         mode: "onBlur",
     })
+
+    const [message, setMessage] = useState("");
 
     const onSubmitIndicators = async (data) => {
         const requestOptions = {
@@ -24,10 +26,15 @@ const ModalIndicators = ({indicators, token, ...props}) => {
                 orcid: data.orcid
             }),
         };
-        console.log(requestOptions)
         const response = await fetch("/api/users/indicators", requestOptions);
+        const answer = await response.json()
         if (response.ok) {
-
+            indicators.wos = answer.wos;
+            indicators.scopus = answer.scopus;
+            indicators.publons = answer.publons;
+            indicators.elibrary = answer.elibrary;
+            indicators.orcid = answer.orcid;
+            props.onClose();
         }
     };
 

@@ -14,7 +14,7 @@ async def service_get_articles_by_author_name(name: str, db: orm.Session):
 
 
 async def service_get_all_articles_by_fields(search: str, page: int, limit: int, publication_type: str,
-                                             start: str, end: str,  db: orm.Session):
+                                             start: str, end: str, db: orm.Session):
     type = db.query(DocumentTypes).filter(DocumentTypes.name == publication_type.lower()).first()
     articles = db.query(Articles).filter(
         Articles.title.like('%' + (search.lower() if search else "") + '%'),
@@ -95,4 +95,3 @@ async def service_delete_article_by_id(id: int, db: orm.Session):
     db.delete(article.verification_article)
     db.delete(article)
     db.commit()
-

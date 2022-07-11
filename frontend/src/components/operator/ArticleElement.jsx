@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Button, Paper, Typography} from "@mui/material";
+import {Button, Link, Paper, Typography} from "@mui/material";
 import ModalArticleConfirmation from "./ModalWindow/ModalArticleConfirmation";
 import ModalRejectArticle from "./ModalWindow/ModalRejectArticle";
 
@@ -28,9 +28,9 @@ const ArticleElement = (props) => {
             }}>
                 <Paper elevation={0}>
                     <Typography variant="h6">{item?.name}</Typography>
-                    <Typography variant="body2">{item?.link}</Typography>
-                    <Typography variant="body2" component="span">{item?.email} </Typography>
-                    <Typography variant="body2" component="span"> {item?.phone}</Typography>
+                    <Link href={item?.link} variant="body1" underline="hover">Ссылка на публикацию</Link>
+                    <Typography variant="body1" component="span"> {item?.email} </Typography>
+                    <Typography variant="body1" component="span"> {item?.phone}</Typography>
                 </Paper>
                 <Paper elevation={0} sx={{display: "flex", flexDirection: "column"}}>
                     <Button color="success" variant="contained" size="small"

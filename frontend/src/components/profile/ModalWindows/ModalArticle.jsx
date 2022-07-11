@@ -19,7 +19,7 @@ const ModalArticle = ({token, ...props}) => {
         const response = await fetch('/api/users/unverified_articles?link='+data.link, requestOptions);
         const answer = await response.json();
         if(response.ok){
-            console.log(answer)
+            props.onClose();
         }
     }
 
